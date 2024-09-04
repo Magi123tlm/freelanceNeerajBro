@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Custom Home Form</title>
+    <style>
+      .disabled {
+        pointer-events: none;
+        opacity: 0.6;
+      }
+      .form-section {
+        margin-bottom: 20px;
+      }
+      label {
+        display: block;
+        margin-bottom: 5px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Custom Home Selection Form</h1>
+    <form id="homeForm">
+      <!-- Door Style -->
+      <div class="form-section" id="doorStyleSection">
+        <label>1. What is your door style? Please visit these websites:</label>
+        <p><a href="https://www.reeb.com" target="_blank">Reeb.com</a></p>
+        <p>
+          <a href="https://www.masonite.com" target="_blank">Masonite.com</a>
+        </p>
+        <input type="text" id="doorStyle" placeholder="Enter door style" />
+      </div>
+
+      <!-- Interior Door Height -->
+      <div class="form-section" id="doorHeightSection">
+        <label>2. What is your interior door height?</label>
+        <label>1st Floor:</label>
+        <select id="doorHeight1st">
+          <option value="80">80”</option>
+          <option value="84">84”</option>
+          <option value="96">96”</option>
+        </select>
+        <label>2nd Floor:</label>
+        <select id="doorHeight2nd">
+          <option value="80">80”</option>
+          <option value="84">84”</option>
+          <option value="96">96”</option>
+        </select>
+        <!-- Add similar sections for other floors -->
+      </div>
+
+      <!-- Vanity Size -->
+      <div class="form-section" id="vanitySizeSection">
+        <label>3. What is the vanity size?</label>
+        <label>Master Bath:</label>
+        <select id="vanityMasterBath">
+          <option value="24">24”</option>
+          <option value="28">28”</option>
+          <!-- Add other options -->
+        </select>
+        <label>Princess Room #1:</label>
+        <select id="vanityPrincessRoom">
+          <option value="24">24”</option>
+          <option value="28">28”</option>
+          <!-- Add other options -->
+        </select>
+        <!-- Add similar sections for other rooms -->
+      </div>
+
+      <!-- Roofing, Siding, Soffit, and Gutters -->
+      <div class="form-section" id="roofingSection">
+        <label
+          >4. What is your color for the Roofing, Siding, Soffit and
+          Gutters?</label
+        >
+        <p>To check colors and material quality, please visit these places:</p>
+        <p>ABC Supply Co./ Avenel, NJ (732)-382-4242</p>
+        <p>Beacon Building Products / East Brunswick, NJ (732)-238-4445</p>
+        <p>National Building Supply / Perth Amboy, NJ (732) 697-0025</p>
+        <input type="text" id="roofingColor" placeholder="Enter color" />
+      </div>
+
+      <!-- Window Style -->
+      <div class="form-section" id="windowStyleSection">
+        <label>5. What is your window style?</label>
+        <input type="checkbox" id="clearWindow" value="Clear" /> Clear
+        <input type="checkbox" id="gridWindow" value="Grid" /> Grid
+        <input type="checkbox" id="casementWindow" value="Casement" /> Casement
+        windows
+        <input type="checkbox" id="doubleHungWindow" value="Double Hung" />
+        Double Hung
+        <input type="checkbox" id="singleHungWindow" value="Single Hung" />
+        Single Hung
+        <input type="checkbox" id="customWindow" value="Custom" /> Custom
+        windows
+      </div>
+
+      <button type="submit">Submit</button>
+    </form>
+  </body>
+  <script>
+    // JavaScript for form handling
+    const form = document.getElementById("homeForm");
+    const doorStyle = document.getElementById("doorStyle");
+    const doorHeight1st = document.getElementById("doorHeight1st");
+    const doorHeight2nd = document.getElementById("doorHeight2nd");
+    const vanityMasterBath = document.getElementById("vanityMasterBath");
+    const vanityPrincessRoom = document.getElementById("vanityPrincessRoom");
+    const roofingColor = document.getElementById("roofingColor");
+    const windowStyleSection = document.getElementById("windowStyleSection");
+    const windowCheckboxes = windowStyleSection.querySelectorAll(
+      'input[type="checkbox"]'
+    );
+
+    // Object to store previous selections
+    let previousSelections =
+      JSON.parse(localStorage.getItem("formSelections")) || {};
+
+    // Function to handle form submission
+    form.addEventListener("submit", function (event) {
+      event.preventDefault();
+      if (!confirm("Are you sure you want to submit your selections?")) return;
+
+      // Capture form data
+      const formData = {
+        doorStyle: doorStyle.value,
+        doorHeight1st: doorHeight1st.value,
+        doorHeight2nd: doorHeight2nd.value,
+        vanityMasterBath: vanityMasterBath.value,
+        vanityPrincessRoom: vanityPrincessRoom.value,
+        roofingColor: roofingColor.value,
+        windowStyles: Array.from(windowCheckboxes)
+          .filter((cb) => cb.checked)
+          .map((cb) => cb.value),
+      };
+
+      // Disable form fields after submission
+      disableFormFields();
+
+      // Save form data to localStorage
+      previousSelections = formData;
+      localStorage.setItem(
+        "formSelections",
+        JSON.stringify(previousSelections)
+      );
+
+      alert("Form submitted successfully!");
+    });
+
+    // Function to disable form fields
+    function disableFormFields() {
+      doorStyle.disabled = true;
+      doorHeight1st.disabled = true;
+      doorHeight2nd.disabled = true;
+      vanityMasterBath.disabled = true;
+      vanityPrincessRoom.disabled = true;
+      roofingColor.disabled = true;
+      windowCheckboxes.forEach((cb) => (cb.disabled = true));
+      form.classList.add("disabled");
+    }
+
+    // Function to load previous selections when form is reopened
+    function loadPreviousSelections() {
+      if (previousSelections.doorStyle)
+        doorStyle.value = previousSelections.doorStyle;
+      if (previousSelections.doorHeight1st)
+        doorHeight1st.value = previousSelections.doorHeight1st;
+      if (previousSelections.doorHeight2nd)
+        doorHeight2nd.value = previousSelections.doorHeight2nd;
+      if (previousSelections.vanityMasterBath)
+        vanityMasterBath.value = previousSelections.vanityMasterBath;
+      if (previousSelections.vanityPrincessRoom)
+        vanityPrincessRoom.value = previousSelections.vanityPrincessRoom;
+      if (previousSelections.roofingColor)
+        roofingColor.value = previousSelections.roofingColor;
+      if (previousSelections.windowStyles) {
+        windowCheckboxes.forEach((cb) => {
+          if (previousSelections.windowStyles.includes(cb.value)) {
+            cb.checked = true;
+          }
+        });
+      }
+      disableFormFields();
+    }
+
+    // Load previous selections when the page is loaded
+    window.onload = function () {
+      loadPreviousSelections();
+    };
+  </script>
+</html>

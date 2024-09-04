@@ -1,0 +1,3 @@
+1.after selecting form value confirmation is needed per selection
+2.form after succesfully selecting any change should be disabled to selected values
+3. after disabling if user wants to change it should be available in history when user starts a new form

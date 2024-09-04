@@ -1,0 +1,825 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        font-family: "Poppins", Arial, sans-serif;
+        margin: 0;
+        padding: 20px;
+        background-color: #f9f9f9;
+      }
+
+      .container {
+        max-width: 1280px;
+        margin: 0 auto;
+        display: flex;
+        background-color: #fff;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        padding: 20px;
+      }
+
+      @media only screen and (max-width: 768px) {
+        .container {
+          flex-direction: column;
+        }
+      }
+
+      .form-container {
+        flex: 7;
+        /* margin: 0 auto; */
+      }
+
+      /* to revert back comment this bro */
+      form {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+
+      h1 {
+        text-align: center;
+        color: #333;
+        margin-bottom: 20px;
+      }
+
+      h2 {
+        font-size: 18px;
+        color: #555;
+        margin-top: 20px;
+        margin-bottom: 10px;
+      }
+
+      span {
+        font-size: 16px;
+        color: #666;
+      }
+      .radio-group {
+        display: flex;
+        align-items: center;
+        margin-bottom: 15px;
+      }
+      .radio-group .radio-span {
+        width: 100px;
+        flex-shrink: 0;
+        font-size: 16px;
+        color: #333;
+      }
+      .radio-options {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 7px;
+      }
+      .radio-options input[type="radio"] {
+        margin-right: 5px;
+      }
+      .radio-options input[name="window_style"] {
+        display: none;
+      }
+
+      .radio-options label {
+        margin-right: 15px;
+        font-size: 16px;
+        color: #333;
+      }
+
+      .radio-options .window-Label {
+        display: flex;
+        align-items: center;
+        cursor: pointer;
+        gap: 5px;
+        transition: background-color 0.3s ease, padding 0.3s ease;
+      }
+
+      .radio-options .window-Label img {
+        height: 50px;
+        width: 50px;
+        margin-right: 10px;
+        object-fit: cover;
+      }
+      .radio-options .window-Label:hover {
+        background-color: #f0f0f0;
+        border-radius: 5px;
+        padding: 10px;
+      }
+
+      ul {
+        margin: 10px 0 20px 0;
+        padding: 0;
+        list-style-type: none;
+      }
+
+      ul li {
+        margin-bottom: 10px;
+      }
+
+      ul li a {
+        color: #007bff;
+        text-decoration: none;
+        font-size: 16px;
+      }
+
+      ul li a:hover {
+        text-decoration: underline;
+      }
+
+      br {
+        margin-bottom: 10px;
+      }
+
+      .summary-container {
+        flex: 3; /* This takes up 30% of the space */
+        padding: 20px;
+        background-color: #f7f7f7;
+        overflow-y: auto;
+      }
+
+      @media only screen and (max-width: 768px) {
+        .summary-container {
+          background-color: #f7f7f7;
+        }
+      }
+
+      .summary-container h2 {
+        margin-top: 0;
+      }
+      .summary-item {
+        margin-bottom: 10px;
+        padding-bottom: 10px;
+        border-bottom: 1px solid #ccc;
+      }
+
+      .summary-item p {
+        margin: 5px 0;
+      }
+
+      .summary-text {
+      }
+      .selection-history-img {
+        height: 60px;
+        width: 60px;
+        object-fit: cover;
+      }
+
+      .summary-timestamp {
+        font-size: 10px;
+        display: flex;
+        justify-content: end;
+      }
+
+      .confirm-box-wrapper {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        display: none;
+        justify-content: center;
+        align-items: center;
+      }
+      .confirm-box {
+        background-color: #fff;
+        padding: 20px;
+        border-radius: 10px;
+        width: 400px;
+        text-align: center;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+      }
+      .confirm-box h2 {
+        margin: 0 0 20px;
+        font-weight: 600;
+        color: #333;
+      }
+      .confirm-box p {
+        margin: 0 0 20px;
+        color: #555;
+      }
+      .confirm-box .buttons {
+        display: flex;
+        gap: 20px;
+        justify-content: center;
+      }
+      .confirm-box button {
+        background-color: #6c63ff;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 16px;
+        transition: background-color 0.3s ease;
+      }
+      .confirm-box button.cancel {
+        background-color: #ddd;
+        color: #333;
+      }
+      .confirm-box button:hover {
+        background-color: #5a53e6;
+      }
+      @keyframes vibrate {
+        0% {
+          transform: translateX(0);
+        }
+        25% {
+          transform: translateX(-4px);
+        }
+        50% {
+          transform: translateX(4px);
+        }
+        75% {
+          transform: translateX(-4px);
+        }
+        100% {
+          transform: translateX(0);
+        }
+      }
+
+      .vibrate {
+        animation: vibrate 0.3s ease-in-out;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="confirm-box-wrapper">
+      <div class="confirm-box">
+        <h2>Please Confirm Your Choice?</h2>
+        <!-- <p>Keep it simple and stupid</p> -->
+        <div class="buttons">
+          <button id="confirmYes">Confirm</button>
+          <button id="confirmNo" class="cancel">Reject</button>
+        </div>
+      </div>
+    </div>
+    <div class="container">
+      <div class="form-container">
+        <h1>Construction Builiding Form</h1>
+        <form action="/" id="formData">
+          <!--This formData is a flexitem and can be understood as left-->
+          <h2>What is your door style?</h2>
+          <span id="noteTxt">Please visit these websites:</span>
+          <ul id="list">
+            <li><a href="https://www.reeb.com" target="_blank">Reeb.com</a></li>
+            <li>
+              <a href="https://www.masonite.com" target="_blank"
+                >Masonite.com</a
+              >
+            </li>
+          </ul>
+
+          <h2>What is your interior door height?</h2>
+          <div class="radio-group">
+            <span class="radio-span">1st Floor:</span>
+            <div class="radio-options">
+              <input
+                type="radio"
+                id="first-floor-80"
+                name="first_floor_height"
+                value="80"
+              />
+              <label for="first-floor-80">80"</label>
+              <input
+                type="radio"
+                id="first-floor-84"
+                name="first_floor_height"
+                value="84"
+              />
+              <label for="first-floor-84">84"</label>
+              <input
+                type="radio"
+                id="first-floor-96"
+                name="first_floor_height"
+                value="96"
+              />
+              <label for="first-floor-96">96"</label>
+            </div>
+          </div>
+          <!-- <br /> -->
+          <div class="radio-group">
+            <span class="radio-span">2nd Floor:</span>
+            <div class="radio-options">
+              <input
+                type="radio"
+                id="second-floor-80"
+                name="second_floor_height"
+                value="80"
+              />
+              <label for="second-floor-80">80"</label>
+              <input
+                type="radio"
+                id="second-floor-84"
+                name="second_floor_height"
+                value="84"
+              />
+              <label for="second-floor-84">84"</label>
+              <input
+                type="radio"
+                id="second-floor-96"
+                name="second_floor_height"
+                value="96"
+              />
+              <label for="second-floor-96">96"</label>
+            </div>
+          </div>
+
+          <div class="radio-group">
+            <span class="radio-span">3rd Floor:</span>
+            <div class="radio-options">
+              <input
+                type="radio"
+                id="third-floor-80"
+                name="third_floor_height"
+                value="80"
+              />
+              <label for="third-floor-80">80"</label>
+              <input
+                type="radio"
+                id="third-floor-84"
+                name="third_floor_height"
+                value="84"
+              />
+              <label for="third-floor-84">84"</label>
+              <input
+                type="radio"
+                id="third-floor-96"
+                name="third_floor_height"
+                value="96"
+              />
+              <label for="third-floor-96">96"</label>
+            </div>
+          </div>
+
+          <div class="radio-group">
+            <span class="radio-span">Basement:</span>
+            <div class="radio-options">
+              <input
+                type="radio"
+                id="basement-80"
+                name="basement_height"
+                value="80"
+              />
+              <label for="basement-80">80"</label>
+              <input
+                type="radio"
+                id="basement-84"
+                name="basement_height"
+                value="84"
+              />
+              <label for="basement-84">84"</label>
+              <input
+                type="radio"
+                id="basement-96"
+                name="basement_height"
+                value="96"
+              />
+              <label for="basement-96">96"</label>
+            </div>
+          </div>
+
+          <div class="radio-group">
+            <span class="radio-span">Attic:</span>
+            <div class="radio-options">
+              <input
+                type="radio"
+                id="attic-80"
+                name="attic_height"
+                value="80"
+              />
+              <label for="attic-80">80"</label>
+              <input
+                type="radio"
+                id="attic-84"
+                name="attic_height"
+                value="84"
+              />
+              <label for="attic-84">84"</label>
+              <input
+                type="radio"
+                id="attic-96"
+                name="attic_height"
+                value="96"
+              />
+              <label for="attic-96">96"</label>
+            </div>
+          </div>
+
+          <h2>What is the vanity size?</h2>
+
+          <div class="radio-group">
+            <span class="radio-span">Master Bath:</span>
+            <div class="radio-options">
+              <input
+                type="radio"
+                id="master-24"
+                name="master_bath_size"
+                value="24"
+              />
+              <label for="master-24">24"</label>
+              <input
+                type="radio"
+                id="master-28"
+                name="master_bath_size"
+                value="28"
+              />
+              <label for="master-28">28"</label>
+              <input
+                type="radio"
+                id="master-30"
+                name="master_bath_size"
+                value="30"
+              />
+              <label for="master-30">30"</label>
+            </div>
+          </div>
+          <!-- <input type="radio" id="master-36" name="master_bath_size" value="36" />
+      <label for="master-36">36"</label>
+      <input type="radio" id="master-42" name="master_bath_size" value="42" />
+      <label for="master-42">42"</label>
+      <input type="radio" id="master-48" name="master_bath_size" value="48" />
+      <label for="master-48">48"</label>
+      <input type="radio" id="master-60" name="master_bath_size" value="60" />
+      <label for="master-60">60"</label>
+      <input type="radio" id="master-84" name="master_bath_size" value="84" />
+      <label for="master-84">84"</label>
+      <input type="radio" id="master-96" name="master_bath_size" value="96" />
+      <label for="master-96">96"</label>
+      <input type="radio" id="master-108" name="master_bath_size" value="108" />
+      <label for="master-108">108"</label> -->
+          <div class="radio-group">
+            <span class="radio-span">Princess Room #1:</span>
+            <div class="radio-options">
+              <input
+                type="radio"
+                id="princess-24"
+                name="princess_room_size"
+                value="24"
+              />
+              <label for="princess-24">24"</label>
+              <input
+                type="radio"
+                id="princess-28"
+                name="princess_room_size"
+                value="28"
+              />
+              <label for="princess-28">28"</label>
+              <input
+                type="radio"
+                id="princess-30"
+                name="princess_room_size"
+                value="30"
+              />
+              <label for="princess-30">30</label>
+            </div>
+          </div>
+          <!-- Add more options similarly -->
+
+          <!-- Bedroom Sizes -->
+          <h2>Bedroom Sizes:</h2>
+
+          <div class="radio-group">
+            <span class="radio-span">Bedroom #2:</span>
+            <div class="radio-options">
+              <input
+                type="radio"
+                id="bedroom2-24"
+                name="bedroom2_size"
+                value="24"
+              />
+              <label for="bedroom2-24">24"</label>
+              <input
+                type="radio"
+                id="bedroom2-28"
+                name="bedroom2_size"
+                value="28"
+              />
+              <label for="bedroom2-28">28"</label>
+              <input
+                type="radio"
+                id="bedroom2-30"
+                name="bedroom2_size"
+                value="30"
+              />
+              <label for="bedroom2-30">30</label>
+            </div>
+          </div>
+
+          <h2>
+            What is your color for the Roofing, Siding, Soffit, and Gutters?
+          </h2>
+          <span
+            >Please visit these places to check colors and material
+            quality:</span
+          >
+          <ul>
+            <li>ABC Supply Co./ Avenel, NJ (732)-382-4242</li>
+            <li>
+              Beacon Building Products / East Brunswick, NJ (732)-238-4445
+            </li>
+            <li>National Building Supply / Perth Amboy, NJ (732) 697-0025</li>
+          </ul>
+
+          <h2>What is you window style?</h2>
+          <div class="radio-group">
+            <!-- <span></span> -->
+            <div class="radio-options">
+              <input
+                type="radio"
+                id="window-clear"
+                name="window_style"
+                value="Clear"
+              />
+              <label for="window-clear" class="window-Label">
+                <img src="./images/clear.png" alt="Clear Window" />
+                Clear</label
+              >
+              <input
+                type="radio"
+                id="window-grid"
+                name="window_style"
+                value="Grid"
+              />
+              <label for="window-grid" class="window-Label"
+                ><img src="./images/grid.png" alt="Grid Window" />Grid</label
+              >
+              <input
+                type="radio"
+                id="window-casement"
+                name="window_style"
+                value="Casement Windows"
+              />
+              <label for="window-casement" class="window-Label"
+                ><img src="./images/casement.png" alt="" />Casement
+                Windows</label
+              >
+              <input
+                type="radio"
+                id="window-double-hung"
+                name="window_style"
+                value="Double Hung"
+              />
+              <label for="window-single-hung" class="window-Label"
+                ><img
+                  src="./images/double.png"
+                  alt="Double Hung Window"
+                />Double Hung</label
+              >
+              <input
+                type="radio"
+                id="window-single-hung"
+                name="window_style"
+                value="Single Hung"
+              />
+              <label for="window-single-hung" class="window-Label"
+                ><img
+                  src="./images/single.png"
+                  alt="Single Hung Window"
+                />Single Hung</label
+              >
+              <input
+                type="radio"
+                id="window-custom-windows"
+                name="window_style"
+                value="Custom Windows"
+              />
+              <label for="window-custom-windows" class="window-Label"
+                ><img src="./images/custom.png" alt="Custom Window" />Custom
+                Windows</label
+              >
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="summary-container">
+        <h2>Selection History</h2>
+        <div class="summary"></div>
+      </div>
+    </div>
+  </body>
+  <script>
+    const radioTimeStamps = {};
+    let confirmationCallback;
+
+    const showConfirmationDialog = (callback) => {
+      //closure formed in confirmationCallback
+      // console.log("callback", callback);
+      confirmationCallback = callback;
+      document.querySelector(".confirm-box-wrapper").style.display = "flex";
+    };
+
+    const handleConfirm = () => {
+      document.querySelector(".confirm-box-wrapper").style.display = "none";
+      if (confirmationCallback) confirmationCallback(true);
+    };
+
+    const handleCancel = () => {
+      document.querySelector(".confirm-box-wrapper").style.display = "none";
+      if (confirmationCallback) confirmationCallback(false);
+    };
+
+    document
+      .querySelector("#confirmYes")
+      .addEventListener("click", handleConfirm);
+
+    document
+      .querySelector("#confirmNo")
+      .addEventListener("click", handleCancel);
+
+    document
+      .querySelector(".confirm-box-wrapper")
+      .addEventListener("click", function (event) {
+        const confirmBox = document.querySelector(".confirm-box");
+
+        if (!confirmBox.contains(event.target)) {
+          confirmBox.classList.add("vibrate");
+          setTimeout(() => {
+            confirmBox.classList.remove("vibrate");
+          }, 300);
+        }
+      });
+
+    const formatText = (str) => {
+      const arr = str.split("_");
+      const capitalizedArr = arr.map((word) => {
+        return word.charAt(0).toUpperCase() + word.slice(1);
+      });
+      const result = capitalizedArr.join(" ");
+      return result; // Outputs: "Princess Room 2"
+    };
+
+    const saveFormData = function (radioName, value, timeStamp) {
+      const formData = JSON.parse(localStorage.getItem("formData")) || {};
+      if (!formData[radioName]) {
+        formData[radioName] = [];
+      }
+      formData[radioName].push({ value, timeStamp });
+      localStorage.setItem("formData", JSON.stringify(formData));
+    };
+
+    //this sorts by radioName
+    // const loadFormData = () => {
+    //   const formData = JSON.parse(localStorage.getItem("formData"));
+    //   if (formData) {
+    //     Object.keys(formData).forEach((radioName) => {
+    //       console.log(formData[radioName], formData);
+    //       formData[radioName].forEach(({ value, timeStamp }) => {
+    //         const radio = document.querySelector(
+    //           `input[name="${radioName}"][value="${value}"]`
+    //         );
+    //         if (radio) {
+    //           radio.checked = true;
+    //           radioTimeStamps[radioName] = timeStamp;
+    //           updateSummary(radio, timeStamp);
+    //         }
+    //       });
+    //     });
+    //   }
+    // };
+
+    //this sorts by timestamp
+    const loadFormData = () => {
+      const formData = JSON.parse(localStorage.getItem("formData"));
+      if (formData) {
+        const allEntries = [];
+        Object.keys(formData).forEach((radioName) => {
+          console.log(formData, formData[radioName], formData.radioName);
+          formData[radioName].forEach(({ value, timeStamp }) => {
+            allEntries.push({ radioName, value, timeStamp });
+          });
+        });
+        console.log("allentries", allEntries);
+        allEntries.sort(
+          (a, b) => new Date(a.timeStamp) - new Date(b.timeStamp)
+        );
+        allEntries.forEach(({ radioName, value, timeStamp }) => {
+          const radio = document.querySelector(
+            `input[name="${radioName}"][value="${value}"]`
+          );
+          if (radio) {
+            radio.checked = true;
+            radioTimeStamps[radioName] = timeStamp;
+            updateSummary(radio, timeStamp);
+          }
+        });
+      }
+    };
+
+    const updateSummary = (radio, timeStamp) => {
+      const summaryDiv = document.querySelector(".summary");
+      const summaryItem = document.createElement("div");
+      summaryItem.classList.add("summary-item");
+
+      //Never start id/class name with a number as html supports it but css does not
+      const selectedLabel = document.querySelector(`label[for=${radio.id}]`);
+
+      const titlePara = document.createElement("p");
+      titlePara.classList.add("summary-text");
+      // const strong = document.createElement("strong");
+      titlePara.textContent = `${formatText(radio.name)}` + ": ";
+      // titlePara.appendChild(strong);
+      if (selectedLabel.querySelector("img")) {
+        const selectedImageSrc = selectedLabel.querySelector("img").src;
+        const selectedImageAlt = selectedLabel.querySelector("img").alt;
+        const newImg = document.createElement("img");
+        newImg.src = selectedImageSrc;
+        newImg.alt = selectedImageAlt;
+        newImg.classList.add("selection-history-img");
+        titlePara.appendChild(newImg);
+      } else {
+        const textNode = document.createTextNode(`${radio.value}`);
+        titlePara.appendChild(textNode);
+      }
+      summaryItem.appendChild(titlePara);
+
+      const timeStampPara = document.createElement("p");
+      timeStampPara.classList.add("summary-timestamp");
+      // const em = document.createElement("em");
+      // em.textContent = "log: ";
+      // timeStampPara.appendChild(em);
+      const timeStampText = document.createTextNode(` ${timeStamp}`);
+      timeStampPara.appendChild(timeStampText);
+      summaryItem.appendChild(timeStampPara);
+
+      summaryDiv.appendChild(summaryItem);
+    };
+
+    const radios = document.querySelectorAll('input[type="radio"]');
+    radios.forEach((radio) => {
+      radio.addEventListener("change", (event) => {
+        showConfirmationDialog((confirmed) => {
+          if (!confirmed) {
+            event.target.checked = false;
+          } else {
+            const radioName = event.target.name;
+            const timeStamp = new Date().toLocaleString();
+            radioTimeStamps[radioName] = timeStamp;
+            console.log(timeStamp, radioTimeStamps);
+
+            saveFormData(radioName, event.target.value, timeStamp);
+            updateSummary(event.target, timeStamp);
+
+            // selects a single group of radio buttons
+            document
+              .querySelectorAll(`input[name="${radioName}"]`)
+              .forEach((r) => {
+                // r.disabled = true;
+                // localStorage.setItem(event.target.name, event.target.value);
+              });
+
+            // switch (radioName) {
+            //   case "first_floor_height":
+            //     output.textContent =
+            //       "Your first floor is " + event.target.value + "m";
+            //     break;
+            //   case "second_floor_height":
+            //     output.textContent =
+            //       "Your second floor is " + event.target.value + "m";
+            //     break;
+            //   case "third_floor_height":
+            //     output.textContent =
+            //       "Your third floor is " + event.target.value + "m";
+            //     break;
+            //   case "basement_height":
+            //     output.textContent =
+            //       "Your basement is " + event.target.value + "m";
+            //     break;
+            //   case "attic_height":
+            //     output.textContent =
+            //       "Your attic is " + event.target.value + "m";
+            //     break;
+            //   case "master_bath_size":
+            //     output.textContent =
+            //       "Your Master Bath is " + event.target.value + "sq.ft";
+            //     break;
+            //   case "princess_room_size":
+            //     output.textContent =
+            //       "Your princess room is " + event.target.value + "sq.ft";
+            //     break;
+            //   case "bedroom2-size":
+            //     output.textContent =
+            //       "Your bedroom is " + event.target.value + "sq.ft";
+            //     break;
+            //   default:
+            //     output.textContent =
+            //       "Your window is of " + event.target.value + " style";
+            //     break;
+            // }
+          }
+        });
+      });
+    });
+
+    window.onload = function () {
+      document.getElementById("formData").reset();
+      loadFormData();
+    };
+  </script>
+</html>
