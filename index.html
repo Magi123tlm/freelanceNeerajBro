@@ -875,6 +875,13 @@
         let yPosition = margin + 30; // Starting yPosition for content
 
         Object.keys(formData).forEach((key) => {
+          // Check if we need to add a new page for the key
+          if (yPosition > pageHeight - margin - 30) {
+            doc.addPage();
+            yPosition = margin + 10; // Reset yPosition for new page
+            drawBorder(); // Redraw border on new page
+          }
+
           doc.setFontSize(12);
           doc.text(
             `${key.replace(/_/g, " ").toUpperCase()}:`,
@@ -884,6 +891,7 @@
           yPosition += 10; // Move yPosition down for the next section
 
           formData[key].forEach((item) => {
+            // Check if we need to add a new page for items
             if (yPosition > pageHeight - margin - 10) {
               doc.addPage();
               yPosition = margin + 10; // Reset yPosition for new page
@@ -900,18 +908,6 @@
           });
 
           yPosition += 10; // Extra space between sections
-          // Check if we need to add a new page
-          if (yPosition > pageHeight - margin - 20) {
-            // Margin + buffer space
-            doc.addPage();
-            yPosition = margin + 20; // Reset yPosition for new page
-            doc.rect(
-              margin,
-              margin,
-              pageWidth - 2 * margin,
-              pageHeight - 2 * margin
-            ); // Redraw border
-          }
         });
 
         // Save the PDF
