@@ -10,6 +10,7 @@
       href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
       rel="stylesheet"
     />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <style>
       body {
         font-family: "Poppins", Arial, sans-serif;
@@ -153,6 +154,17 @@
         .summary-container {
           background-color: #f7f7f7;
         }
+      }
+      .summary-header {
+        display: flex;
+        justify-content: space-between;
+      }
+
+      #sticky {
+        padding: 10px;
+        border: none;
+        cursor: pointer;
+        border-radius: 5px;
       }
 
       .summary-container h2 {
@@ -605,7 +617,10 @@
         </form>
       </div>
       <div class="summary-container">
-        <h2>Selection History</h2>
+        <div class="summary-header">
+          <h2>Selection History</h2>
+          <button type="button" id="sticky">Download History</button>
+        </div>
         <div class="summary"></div>
       </div>
     </div>
@@ -696,7 +711,6 @@
       if (formData) {
         const allEntries = [];
         Object.keys(formData).forEach((radioName) => {
-          console.log(formData, formData[radioName], formData.radioName);
           formData[radioName].forEach(({ value, timeStamp }) => {
             allEntries.push({ radioName, value, timeStamp });
           });
@@ -821,6 +835,90 @@
           }
         });
       });
+    });
+
+    const downloadButton = document.querySelector("#sticky");
+
+    downloadButton.addEventListener("click", () => {
+      const formData = JSON.parse(localStorage.getItem("formData"));
+
+      if (formData) {
+        // Initialize jsPDF
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF();
+
+        // Set border properties
+        const margin = 10; // Margin from page edge
+        const borderWidth = 0.5; // Border thickness
+        doc.setLineWidth(borderWidth);
+        const pageWidth = doc.internal.pageSize.getWidth();
+        const pageHeight = doc.internal.pageSize.getHeight();
+
+        const drawBorder = () => {
+          doc.rect(
+            margin,
+            margin,
+            pageWidth - 2 * margin,
+            pageHeight - 2 * margin
+          );
+        };
+
+        // Draw initial border
+        drawBorder();
+
+        // Set the font and color for the title
+        doc.setFontSize(16);
+        doc.setTextColor(40);
+        doc.text("Form Data Summary", margin + 10, margin + 15);
+
+        // Add the JSON data to the PDF
+        let yPosition = margin + 30; // Starting yPosition for content
+
+        Object.keys(formData).forEach((key) => {
+          doc.setFontSize(12);
+          doc.text(
+            `${key.replace(/_/g, " ").toUpperCase()}:`,
+            margin + 10,
+            yPosition
+          );
+          yPosition += 10; // Move yPosition down for the next section
+
+          formData[key].forEach((item) => {
+            if (yPosition > pageHeight - margin - 10) {
+              doc.addPage();
+              yPosition = margin + 10; // Reset yPosition for new page
+              drawBorder(); // Redraw border on new page
+            }
+
+            doc.setFontSize(10);
+            doc.text(
+              `- Value: ${item.value}, Timestamp: ${item.timeStamp}`,
+              margin + 20,
+              yPosition
+            );
+            yPosition += 10; // Move yPosition down for the next item
+          });
+
+          yPosition += 10; // Extra space between sections
+          // Check if we need to add a new page
+          if (yPosition > pageHeight - margin - 20) {
+            // Margin + buffer space
+            doc.addPage();
+            yPosition = margin + 20; // Reset yPosition for new page
+            doc.rect(
+              margin,
+              margin,
+              pageWidth - 2 * margin,
+              pageHeight - 2 * margin
+            ); // Redraw border
+          }
+        });
+
+        // Save the PDF
+        doc.save("form_data.pdf");
+      } else {
+        alert("No form data to download!");
+      }
     });
 
     window.onload = function () {
